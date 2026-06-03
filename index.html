@@ -730,7 +730,12 @@ function renderResult(){
 
 function buildVisual(){
   const r=aiResult;
-  const fs=(r?.feedStyle||'BOLD').toUpperCase();
+  const rawFs=r?.feedStyle||'';
+  let fs='BOLD';
+  if(rawFs.toUpperCase().includes('WARM'))fs='WARM';
+  else if(rawFs.toUpperCase().includes('CREATIVE')||rawFs.toUpperCase().includes('UNIQUE'))fs='CREATIVE';
+  else if(rawFs.toUpperCase().includes('FRESH'))fs='FRESH';
+  else if(rawFs.toUpperCase().includes('BOLD'))fs='BOLD';
   const styles={
     'BOLD':{label:'BOLD & MINIMAL',colors:{main:'#111111',sub:'#555555',acc:'#ff2d55'},avatarBg:'#111111',bio:g('d-goal')||'目標に向かって発信中',posts:[{t:'reel',l:'リール'},{t:'post',l:'投稿'},{t:'reel',l:'リール'},{t:'post',l:'投稿'},{t:'post',l:'投稿'},{t:'post',l:'投稿'},{t:'reel',l:'リール'},{t:'post',l:'投稿'},{t:'post',l:'投稿'}],pc:{reel:'#111',post:'#444'}},
     'WARM':{label:'WARM & REAL',colors:{main:'#b45309',sub:'#d97706',acc:'#f59e0b'},avatarBg:'#f59e0b',bio:g('d-goal')||'等身大で発信中',posts:[{t:'reel',l:'リール'},{t:'story',l:'日常'},{t:'post',l:'投稿'},{t:'story',l:'日常'},{t:'reel',l:'リール'},{t:'post',l:'投稿'},{t:'post',l:'投稿'},{t:'reel',l:'リール'},{t:'story',l:'日常'}],pc:{reel:'#b45309',post:'#d97706',story:'#f59e0b'}},
