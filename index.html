@@ -860,7 +860,7 @@ async function submitSurvey(){
   const payload={timestamp:new Date().toISOString(),brandType:aiResult?.brandType||'',usability:q1,aiUsefulness:q2,goodFeatures,improve,comment};
 
   try{
-    await fetch('https://formspree.io/f/YOUR_FORM_ID',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+    await fetch('https://formspree.io/f/xabcdefg',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
   }catch(e){console.log('survey send note:',e);}
 
   document.getElementById('survey-form').style.display='none';
