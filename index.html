@@ -1,0 +1,880 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Instagram Brand Designer</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Noto+Sans+JP:wght@300;400;700;900&family=Space+Mono&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0a0a0a;--card:#111;--card2:#181818;--acc:#ff2d55;--acc2:#ff9500;--gold:#ffd60a;--pur:#7c5cfc;--pur2:#bf5af2;--white:#f0f0f0;--gray:#666;--bdr:#1e1e1e;--grn:#00d68f;}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--white);font-family:'Noto Sans JP',sans-serif;min-height:100vh;overflow-x:hidden;}
+body::after{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)' opacity='0.03'/%3E%3C/svg%3E");pointer-events:none;z-index:9999;}
+.wrap{max-width:680px;margin:0 auto;padding:0 20px 100px;position:relative;z-index:1;}
+.screen{display:none;}.screen.on{display:block;animation:up 0.4s cubic-bezier(0.16,1,0.3,1);}
+@keyframes up{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+.hd{padding:44px 0 20px;text-align:center;}
+.eye{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:5px;color:var(--acc);text-transform:uppercase;margin-bottom:10px;}
+h1.big{font-family:'Bebas Neue',sans-serif;font-size:clamp(52px,14vw,80px);letter-spacing:3px;line-height:0.95;background:linear-gradient(160deg,var(--white) 30%,#444);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.sub{font-size:12px;color:var(--gray);margin-top:12px;font-weight:300;letter-spacing:1px;}
+/* PROGRESS */
+.prog{margin:24px 0 36px;}
+.prog-meta{display:flex;justify-content:space-between;font-family:'Space Mono',monospace;font-size:10px;color:var(--gray);margin-bottom:6px;}
+.prog-track{height:1px;background:var(--bdr);position:relative;}
+.prog-bar{height:1px;background:linear-gradient(90deg,var(--acc),var(--acc2));transition:width 0.6s cubic-bezier(0.4,0,0.2,1);position:absolute;top:0;left:0;}
+.prog-dot{width:6px;height:6px;background:var(--acc2);border-radius:50%;position:absolute;top:-2.5px;transition:left 0.6s cubic-bezier(0.4,0,0.2,1);}
+/* QUIZ 5択 */
+.q-big{font-family:'Bebas Neue',sans-serif;font-size:88px;color:var(--bdr);line-height:1;margin-bottom:-12px;user-select:none;}
+.q-txt{font-size:20px;font-weight:700;line-height:1.45;margin-bottom:8px;}
+.q-note{font-size:12px;color:var(--gray);margin-bottom:20px;font-weight:300;}
+.choices{display:flex;flex-direction:column;gap:8px;}
+.ch{background:var(--card);border:1px solid var(--bdr);border-radius:12px;padding:14px 18px;cursor:pointer;transition:all 0.18s;display:flex;align-items:flex-start;gap:14px;-webkit-tap-highlight-color:transparent;}
+.ch:hover{border-color:#333;background:var(--card2);}
+.ch.on{border-color:var(--acc);background:rgba(255,45,85,0.08);}
+.ch-l{font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--gray);min-width:24px;line-height:1.2;transition:color 0.18s;flex-shrink:0;}
+.ch.on .ch-l{color:var(--acc);}
+.ch-title{font-size:14px;font-weight:700;margin-bottom:2px;}
+.ch-desc{font-size:11px;color:var(--gray);font-weight:300;line-height:1.5;}
+/* FORM */
+.st{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:4px;color:var(--acc);text-transform:uppercase;margin:32px 0 12px;}
+.st:first-child{margin-top:0;}
+.sn{font-size:12px;color:var(--gray);line-height:1.7;margin:-4px 0 12px;font-weight:300;}
+.fg{background:var(--card);border:1px solid var(--bdr);border-radius:14px;overflow:hidden;margin-bottom:12px;}
+.fi{padding:14px 18px;border-bottom:1px solid var(--bdr);}
+.fi:last-child{border-bottom:none;}
+.fi label{display:block;font-family:'Space Mono',monospace;font-size:9px;letter-spacing:3px;color:var(--gray);text-transform:uppercase;margin-bottom:7px;}
+.fi input,.fi textarea,.fi select{width:100%;background:transparent;border:none;outline:none;color:var(--white);font-family:'Noto Sans JP',sans-serif;font-size:14px;resize:none;line-height:1.6;}
+.fi textarea{min-height:52px;}
+.fi input::placeholder,.fi textarea::placeholder{color:#333;}
+.fi select option{background:#111;}
+/* BUTTONS */
+.btn{width:100%;padding:17px;border:none;border-radius:12px;font-family:'Noto Sans JP',sans-serif;font-size:14px;font-weight:700;cursor:pointer;transition:all 0.2s;letter-spacing:1px;display:block;-webkit-tap-highlight-color:transparent;}
+.btn-r{background:linear-gradient(135deg,var(--acc),var(--acc2));color:#fff;margin-top:26px;}
+.btn-r:hover{opacity:0.88;transform:translateY(-2px);}
+.btn-r:disabled{opacity:0.3;cursor:not-allowed;transform:none;}
+.btn-p{background:linear-gradient(135deg,var(--pur),var(--pur2));color:#fff;margin-top:12px;}
+.btn-p:hover{opacity:0.88;transform:translateY(-1px);}
+.btn-g{background:transparent;border:1px solid var(--bdr);color:var(--gray);margin-top:10px;}
+.btn-g:hover{border-color:#444;color:var(--white);}
+/* LOADING */
+.load-wrap{text-align:center;padding:80px 20px;}
+.spin{width:44px;height:44px;border:2px solid var(--bdr);border-top-color:var(--pur);border-radius:50%;animation:spin 0.7s linear infinite;margin:0 auto 20px;}
+@keyframes spin{to{transform:rotate(360deg)}}
+.load-txt{font-size:14px;color:var(--gray);font-weight:300;}
+.load-step{font-size:11px;color:var(--pur2);margin-top:8px;font-family:'Space Mono',monospace;letter-spacing:1px;min-height:20px;}
+/* RESULT */
+.r-hero{background:linear-gradient(135deg,var(--acc),var(--acc2));border-radius:16px;padding:28px 24px;text-align:center;margin-bottom:18px;position:relative;overflow:hidden;}
+.r-hero::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 30% 50%,rgba(255,255,255,0.12),transparent 60%);}
+.r-hero-eye{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:4px;opacity:0.8;margin-bottom:8px;}
+.r-hero-type{font-family:'Bebas Neue',sans-serif;font-size:48px;letter-spacing:3px;line-height:1;}
+.r-hero-desc{font-size:13px;opacity:0.9;line-height:1.6;font-weight:300;margin-top:10px;}
+.r-card{background:var(--card);border:1px solid var(--bdr);border-radius:14px;overflow:hidden;margin-bottom:12px;}
+.r-head{padding:12px 18px;border-bottom:1px solid var(--bdr);font-family:'Space Mono',monospace;font-size:10px;letter-spacing:3px;color:var(--acc);text-transform:uppercase;}
+.r-body{padding:16px 18px;}
+/* PROFILE OPTIONS */
+.pf-opt{background:var(--card2);border:1px solid var(--bdr);border-radius:10px;padding:14px 16px;margin-bottom:10px;}
+.pf-opt:last-child{margin-bottom:0;}
+.pf-opt-lbl{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:2px;color:var(--acc);margin-bottom:6px;}
+.pf-opt-txt{font-size:13px;line-height:1.7;font-weight:300;margin-bottom:8px;}
+.pf-opt-target{font-size:11px;color:var(--acc2);margin-bottom:4px;}
+.pf-opt-posts{font-size:11px;color:var(--gray);line-height:1.5;}
+/* BRAND DECL */
+.bd-item{background:var(--card2);border:1px solid var(--bdr);border-radius:10px;padding:12px 16px;margin-bottom:8px;display:flex;align-items:center;gap:12px;}
+.bd-item:last-child{margin-bottom:0;}
+.bd-n{font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--acc);min-width:26px;}
+.bd-txt{font-size:15px;font-weight:700;}
+/* COLORS */
+.palette{background:var(--card2);border:1px solid var(--bdr);border-radius:10px;padding:14px 16px;margin-bottom:10px;}
+.palette:last-child{margin-bottom:0;}
+.palette-name{font-size:13px;font-weight:700;margin-bottom:10px;}
+.swatches{display:flex;gap:6px;margin-bottom:8px;}
+.sw{flex:1;border-radius:8px;height:44px;border:1px solid rgba(255,255,255,0.08);}
+.sw-row{display:flex;gap:6px;}
+.sw-cell{flex:1;text-align:center;}
+.sw-lbl{font-size:9px;color:var(--gray);display:block;margin-bottom:1px;}
+.sw-hex{font-family:'Space Mono',monospace;font-size:9px;color:var(--white);}
+.palette-reason{font-size:11px;color:var(--gray);line-height:1.5;font-weight:300;margin-top:8px;}
+/* FEED PREVIEW */
+.feed-preview{background:#fff;border-radius:14px;overflow:hidden;margin-bottom:10px;}
+.feed-header{background:#fff;padding:8px 12px;display:flex;align-items:center;justify-content:space-between;border-bottom:0.5px solid #efefef;}
+.feed-acct{font-size:12px;font-weight:700;color:#111;}
+.feed-profile{padding:10px 12px 8px;background:#fff;}
+.feed-top{display:flex;align-items:center;gap:10px;margin-bottom:7px;}
+.feed-avatar{width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;color:#fff;flex-shrink:0;}
+.feed-stats{display:flex;gap:12px;}
+.feed-stat{text-align:center;}
+.feed-stat-n{font-size:12px;font-weight:700;color:#111;}
+.feed-stat-l{font-size:9px;color:#888;}
+.feed-bio{font-size:10px;color:#111;line-height:1.5;margin-bottom:7px;}
+.feed-btn-row{display:flex;gap:5px;}
+.feed-btn{flex:1;text-align:center;padding:4px;border:0.5px solid #dbdbdb;border-radius:5px;font-size:10px;font-weight:500;color:#111;background:#fff;}
+.feed-hls{padding:0 10px 8px;display:flex;gap:10px;background:#fff;}
+.feed-hl{text-align:center;flex-shrink:0;}
+.feed-hl-ring{width:40px;height:40px;border-radius:50%;margin:0 auto 3px;display:flex;align-items:center;justify-content:center;font-size:14px;border:2px solid transparent;background:#fff;}
+.feed-hl-lbl{font-size:8px;color:#111;}
+.feed-tabs{display:flex;border-top:0.5px solid #efefef;border-bottom:0.5px solid #efefef;background:#fff;}
+.feed-tab{flex:1;text-align:center;padding:7px;font-size:14px;color:#aaa;}
+.feed-tab.active{color:#111;border-bottom:1.5px solid #111;}
+.feed-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5px;background:#efefef;}
+.feed-cell{aspect-ratio:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;position:relative;}
+.feed-cell-icon{font-size:18px;color:rgba(255,255,255,0.92);}
+.feed-cell-lbl{font-size:7px;color:rgba(255,255,255,0.75);letter-spacing:0.5px;}
+.feed-cell-reel{position:absolute;top:4px;right:4px;font-size:8px;color:rgba(255,255,255,0.85);}
+/* POSTS */
+.post-item{background:var(--card2);border:1px solid var(--bdr);border-radius:10px;padding:12px 16px;margin-bottom:8px;}
+.post-item:last-child{margin-bottom:0;}
+.post-n{font-family:'Space Mono',monospace;font-size:9px;color:var(--acc);letter-spacing:2px;margin-bottom:5px;}
+.post-title{font-size:13px;font-weight:700;margin-bottom:2px;}
+.post-desc{font-size:11px;color:var(--gray);font-weight:300;line-height:1.5;}
+/* REELS */
+.reel-item{background:var(--card2);border:1px solid var(--bdr);border-radius:10px;padding:13px 16px;margin-bottom:8px;}
+.reel-item:last-child{margin-bottom:0;}
+.reel-n{font-family:'Space Mono',monospace;font-size:9px;color:var(--acc);letter-spacing:2px;margin-bottom:9px;}
+.reel-r{display:flex;gap:8px;margin-bottom:5px;font-size:12px;}
+.reel-r:last-child{margin-bottom:0;}
+.reel-k{font-size:10px;color:var(--gray);min-width:85px;flex-shrink:0;padding-top:1px;font-family:'Space Mono',monospace;}
+.reel-v{color:var(--white);font-weight:300;flex:1;line-height:1.5;}
+/* SCHEDULE */
+.sched{display:grid;grid-template-columns:44px 1fr;border-radius:10px;overflow:hidden;border:1px solid var(--bdr);}
+.sd{background:var(--card2);padding:10px 12px;font-family:'Space Mono',monospace;font-size:11px;color:var(--gray);display:flex;align-items:center;border-bottom:1px solid var(--bdr);}
+.sv{background:var(--card);padding:10px 14px;font-size:12px;color:var(--white);font-weight:300;border-bottom:1px solid var(--bdr);}
+.sd:last-of-type,.sv:last-of-type{border-bottom:none;}
+/* UNITY */
+.unity-item{background:var(--card2);border:1px solid var(--bdr);border-radius:10px;padding:12px 16px;margin-bottom:8px;display:flex;gap:10px;align-items:flex-start;}
+.unity-item:last-child{margin-bottom:0;}
+/* MBTI */
+.mbti-adv{background:rgba(124,92,252,0.1);border:1px solid rgba(124,92,252,0.3);border-radius:10px;padding:13px 16px;margin-bottom:8px;}
+.mbti-adv:last-child{margin-bottom:0;}
+.mbti-adv-n{font-family:'Space Mono',monospace;font-size:9px;color:var(--pur2);letter-spacing:2px;margin-bottom:5px;}
+/* VISUAL BRAND */
+.vb-legend{display:flex;flex-direction:column;gap:6px;}
+.vb-legend-row{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--white);}
+.vb-legend-dot{width:12px;height:12px;border-radius:3px;flex-shrink:0;}
+.vb-style-btns{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px;}
+.vb-style-btn{padding:6px 14px;border-radius:20px;font-size:12px;font-weight:700;cursor:pointer;border:1px solid var(--bdr);background:var(--card);color:var(--gray);transition:all 0.2s;font-family:'Noto Sans JP',sans-serif;}
+.vb-style-btn.on{background:var(--white);color:#111;border-color:var(--white);}
+/* SUMMARY */
+.sum-sec{margin-bottom:22px;}
+.sum-title{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:4px;color:var(--acc);text-transform:uppercase;margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--bdr);}
+.sum-row{display:flex;gap:10px;padding:7px 0;border-bottom:1px solid #111;}
+.sum-row:last-child{border-bottom:none;}
+.sum-k{font-size:10px;color:var(--gray);min-width:100px;flex-shrink:0;padding-top:1px;font-family:'Space Mono',monospace;}
+.sum-v{font-size:12px;color:var(--white);font-weight:300;line-height:1.6;flex:1;}
+.sum-v.empty{color:#333;font-style:italic;}
+/* SURVEY */
+.survey-item{background:var(--card);border:1px solid var(--bdr);border-radius:12px;overflow:hidden;margin-bottom:12px;}
+.survey-q{padding:14px 18px;border-bottom:1px solid var(--bdr);font-size:14px;font-weight:700;}
+.survey-stars{display:flex;gap:8px;padding:14px 18px;border-bottom:1px solid var(--bdr);}
+.star-btn{font-size:28px;cursor:pointer;opacity:0.3;transition:all 0.15s;-webkit-tap-highlight-color:transparent;}
+.star-btn.on{opacity:1;}
+.survey-ta{padding:0;}
+.survey-ta textarea{width:100%;background:transparent;border:none;outline:none;color:var(--white);font-family:'Noto Sans JP',sans-serif;font-size:14px;resize:none;line-height:1.6;padding:14px 18px;min-height:80px;}
+.survey-ta textarea::placeholder{color:#333;}
+.survey-cb-list{display:flex;flex-direction:column;gap:8px;padding:14px 18px;}
+.survey-cb{display:flex;align-items:center;gap:10px;cursor:pointer;font-size:13px;-webkit-tap-highlight-color:transparent;}
+.cb-box{width:18px;height:18px;border:1.5px solid #444;border-radius:4px;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all 0.15s;font-size:11px;}
+.survey-cb.on .cb-box{background:var(--acc);border-color:var(--acc);}
+.survey-submit-wrap{margin-top:0;}
+.survey-done{text-align:center;padding:24px;display:none;}
+.survey-done-icon{font-size:48px;margin-bottom:12px;}
+.survey-done-txt{font-size:16px;font-weight:700;margin-bottom:6px;}
+.survey-done-sub{font-size:13px;color:var(--gray);font-weight:300;}
+/* DIVIDER */
+.divider{height:1px;background:var(--bdr);margin:24px 0;}
+@media print{
+  body{background:#fff;color:#111;}
+  body::after{display:none;}
+  .btn,.btn-g,.btn-r,.btn-p{display:none!important;}
+  .screen{display:none!important;}
+  #s-summary{display:block!important;}
+  h1.big{-webkit-text-fill-color:#111;background:none;}
+  .fg,.r-card,.pf-opt,.bd-item,.palette,.post-item,.reel-item,.unity-item,.mbti-adv{border-color:#ddd;background:#fafafa;}
+  .r-hero{background:#eee;color:#111;}
+  .sw{-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  .feed-preview{border:1px solid #ddd;}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<!-- INTRO -->
+<div class="screen on" id="s-intro">
+  <div class="hd"><div class="eye">Instagram</div><h1 class="big">BRAND<br>DESIGNER</h1><div class="sub">ダンサー・アーティストのための完全設計ツール</div></div>
+  <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:24px;">
+    <div style="background:var(--card);border:1px solid var(--bdr);border-radius:12px;padding:15px 18px;display:flex;gap:14px;align-items:center;"><div style="font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--acc);min-width:28px;">01</div><div><div style="font-size:14px;font-weight:700;">ブランド診断（5択・8問）</div><div style="font-size:11px;color:var(--gray);margin-top:2px;">MBTIスタイルで自分のタイプを見つける</div></div></div>
+    <div style="background:var(--card);border:1px solid var(--bdr);border-radius:12px;padding:15px 18px;display:flex;gap:14px;align-items:center;"><div style="font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--acc);min-width:28px;">02</div><div><div style="font-size:14px;font-weight:700;">自分の情報を入力</div><div style="font-size:11px;color:var(--gray);margin-top:2px;">MBTI・好きなこと・目指すこと</div></div></div>
+    <div style="background:var(--card);border:1px solid var(--bdr);border-radius:12px;padding:15px 18px;display:flex;gap:14px;align-items:center;"><div style="font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--acc);min-width:28px;">03</div><div><div style="font-size:14px;font-weight:700;">AIがアカウントを完全設計</div><div style="font-size:11px;color:var(--gray);margin-top:2px;">プロフィール・カラー・投稿・リール・スケジュール</div></div></div>
+    <div style="background:var(--card);border:1px solid var(--bdr);border-radius:12px;padding:15px 18px;display:flex;gap:14px;align-items:center;"><div style="font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--acc);min-width:28px;">04</div><div><div style="font-size:14px;font-weight:700;">フィードビジュアルプレビュー</div><div style="font-size:11px;color:var(--gray);margin-top:2px;">実際のインスタ画面で運用イメージを確認</div></div></div>
+  </div>
+  <button class="btn btn-r" onclick="go('s-quiz')">スタート →</button>
+</div>
+
+<!-- QUIZ -->
+<div class="screen" id="s-quiz">
+  <div class="prog"><div class="prog-meta"><span>BRAND DIAGNOSIS</span><span id="prog-txt">1 / 8</span></div><div class="prog-track"><div class="prog-bar" id="prog-bar" style="width:12.5%"></div><div class="prog-dot" id="prog-dot" style="left:12.5%"></div></div></div>
+  <div id="quiz-area"></div>
+  <button class="btn btn-r" id="btn-next" onclick="nextQ()" disabled>次へ →</button>
+  <button class="btn btn-g" id="btn-back" onclick="prevQ()" style="display:none">← 戻る</button>
+</div>
+
+<!-- INPUT -->
+<div class="screen" id="s-input">
+  <div class="hd"><div class="eye">Step 02</div><h1 class="big">YOUR<br>INFO</h1><div class="sub">詳しく書くほどAIの精度が上がります</div></div>
+  <div class="st">基本情報</div>
+  <div class="fg">
+    <div class="fi"><label>名前・活動名</label><input id="d-name" type="text" placeholder="例：Yuki / YUKI.dance"></div>
+    <div class="fi"><label>ジャンル・スタイル</label><input id="d-genre" type="text" placeholder="例：HipHop / Contemporary / イラスト / 歌"></div>
+    <div class="fi"><label>活動拠点・所属</label><input id="d-base" type="text" placeholder="例：○○ダンススクール / 専門学校2年"></div>
+    <div class="fi"><label>今目指していること</label><input id="d-goal" type="text" placeholder="例：プロダンサーとして海外公演に立つ"></div>
+    <div class="fi"><label>見てほしい人</label><input id="d-target" type="text" placeholder="例：同世代のダンス好き・出演者を探している主催者"></div>
+    <div class="fi"><label>見た人に感じてほしいこと</label><input id="d-feeling" type="text" placeholder="例：憧れ・感動・楽しさ・かっこよさ"></div>
+  </div>
+  <div class="st">自分の深掘り</div>
+  <div class="sn">好きなこと・日常からコンテンツのネタが逆算できます</div>
+  <div class="fg">
+    <div class="fi"><label>好きなこと・趣味</label><input id="d-likes" type="text" placeholder="例：音楽鑑賞・映画・古着・カフェ巡り"></div>
+    <div class="fi"><label>影響を受けたアーティスト</label><input id="d-influence" type="text" placeholder="例：Chris Brown・三浦大知・EXILE"></div>
+    <div class="fi"><label>今やっていること</label><input id="d-doing" type="text" placeholder="例：週5練習・カフェバイト・専門学校"></div>
+    <div class="fi"><label>始めたきっかけ</label><textarea id="d-start" placeholder="例：小6のときYouTubeのMVを見て独学で始めた"></textarea></div>
+    <div class="fi"><label>苦手なこと・弱点</label><input id="d-weak" type="text" placeholder="例：人前で話すのが苦手・継続が苦手"></div>
+    <div class="fi"><label>今の実績・経験</label><textarea id="d-record" placeholder="例：スクール3年・発表会5回・コンテスト出場&#10;まだない場合は「なし」でOK"></textarea></div>
+  </div>
+  <div class="st">🧠 MBTIタイプ（任意）</div>
+  <div class="sn">性格・得意な発信スタイルも踏まえた提案ができます</div>
+  <div class="fg">
+    <div class="fi">
+      <label>MBTIタイプ</label>
+      <select id="d-mbti">
+        <option value="">わからない / スキップ</option>
+        <option value="INTJ">INTJ — 建築家</option><option value="INTP">INTP — 論理学者</option>
+        <option value="ENTJ">ENTJ — 指揮官</option><option value="ENTP">ENTP — 討論者</option>
+        <option value="INFJ">INFJ — 提唱者</option><option value="INFP">INFP — 仲介者</option>
+        <option value="ENFJ">ENFJ — 主人公</option><option value="ENFP">ENFP — 広報運動家</option>
+        <option value="ISTJ">ISTJ — 管理者</option><option value="ISFJ">ISFJ — 擁護者</option>
+        <option value="ESTJ">ESTJ — 幹部</option><option value="ESFJ">ESFJ — 領事</option>
+        <option value="ISTP">ISTP — 巨匠</option><option value="ISFP">ISFP — 冒険家</option>
+        <option value="ESTP">ESTP — 起業家</option><option value="ESFP">ESFP — エンターテイナー</option>
+      </select>
+    </div>
+    <div class="fi"><label>MBTIから感じる自分の特徴（任意）</label><input id="d-mbti-note" type="text" placeholder="例：計画的・感情表現が得意・直感で動く"></div>
+  </div>
+  <button class="btn btn-r" id="btn-gen" onclick="generate()">🤖 AIにアカウントを設計してもらう →</button>
+  <button class="btn btn-g" onclick="go('s-quiz')">← 戻る</button>
+</div>
+
+<!-- LOADING -->
+<div class="screen" id="s-loading">
+  <div style="padding-top:80px;">
+    <div class="load-wrap">
+      <div class="spin"></div>
+      <div class="load-txt">AIがあなたのアカウントを設計中...</div>
+      <div class="load-step" id="load-step">情報を分析しています</div>
+    </div>
+  </div>
+</div>
+
+<!-- RESULT -->
+<div class="screen" id="s-result">
+  <div class="hd"><div class="eye">AI Design</div><h1 class="big">YOUR<br>BRAND</h1></div>
+  <div id="result-area"></div>
+  <div class="divider"></div>
+  <button class="btn btn-p" onclick="go('s-visual')">🎨 フィードビジュアルを確認する →</button>
+  <button class="btn btn-r" onclick="go('s-summary')" style="margin-top:10px;">📋 まとめ・PDF出力 →</button>
+  <button class="btn btn-g" onclick="go('s-input')">← 入力に戻る</button>
+</div>
+
+<!-- VISUAL -->
+<div class="screen" id="s-visual">
+  <div class="hd"><div class="eye">Feed Preview</div><h1 class="big">FEED<br>IMAGE</h1><div class="sub">運用イメージをフィードグリッドで確認</div></div>
+  <div id="visual-area"></div>
+  <button class="btn btn-r" onclick="go('s-summary')" style="margin-top:20px;">📋 まとめへ →</button>
+  <button class="btn btn-g" onclick="go('s-result')">← 結果に戻る</button>
+</div>
+
+<!-- SUMMARY -->
+<div class="screen" id="s-summary">
+  <div class="hd"><div class="eye">Complete</div><h1 class="big">まとめ</h1></div>
+  <div id="sum-area"></div>
+  <div class="divider"></div>
+  <button class="btn btn-r" onclick="go('s-survey')" style="background:linear-gradient(135deg,var(--pur),var(--pur2));">📝 アンケートに答える →</button>
+  <button class="btn btn-r" onclick="window.print()" style="background:linear-gradient(135deg,#1a1a1a,#2a2a2a);border:1px solid #333;margin-top:10px;">🖨 PDFで保存する</button>
+  <button class="btn btn-g" onclick="go('s-result')">← 結果に戻る</button>
+</div>
+
+<!-- SURVEY -->
+<div class="screen" id="s-survey">
+  <div class="hd"><div class="eye">Feedback</div><h1 class="big">アンケート</h1><div class="sub">授業改善のためにご協力ください（テスト版）</div></div>
+
+  <div id="survey-form">
+    <div class="survey-item">
+      <div class="survey-q">Q1. このツールの使いやすさは？</div>
+      <div class="survey-stars" id="stars-1">
+        <span class="star-btn" onclick="setStar(1,1)">★</span><span class="star-btn" onclick="setStar(1,2)">★</span><span class="star-btn" onclick="setStar(1,3)">★</span><span class="star-btn" onclick="setStar(1,4)">★</span><span class="star-btn" onclick="setStar(1,5)">★</span>
+      </div>
+    </div>
+    <div class="survey-item">
+      <div class="survey-q">Q2. AIの提案は役に立ちましたか？</div>
+      <div class="survey-stars" id="stars-2">
+        <span class="star-btn" onclick="setStar(2,1)">★</span><span class="star-btn" onclick="setStar(2,2)">★</span><span class="star-btn" onclick="setStar(2,3)">★</span><span class="star-btn" onclick="setStar(2,4)">★</span><span class="star-btn" onclick="setStar(2,5)">★</span>
+      </div>
+    </div>
+    <div class="survey-item">
+      <div class="survey-q">Q3. 特に良かった機能は？（複数選択OK）</div>
+      <div class="survey-cb-list" id="cb-list">
+        <label class="survey-cb" onclick="toggleCb(this)"><div class="cb-box">✓</div><span>ブランド診断</span></label>
+        <label class="survey-cb" onclick="toggleCb(this)"><div class="cb-box">✓</div><span>プロフィール文の提案</span></label>
+        <label class="survey-cb" onclick="toggleCb(this)"><div class="cb-box">✓</div><span>ブランドカラーの提案</span></label>
+        <label class="survey-cb" onclick="toggleCb(this)"><div class="cb-box">✓</div><span>投稿ネタの提案</span></label>
+        <label class="survey-cb" onclick="toggleCb(this)"><div class="cb-box">✓</div><span>フィードビジュアルプレビュー</span></label>
+        <label class="survey-cb" onclick="toggleCb(this)"><div class="cb-box">✓</div><span>週間スケジュール</span></label>
+        <label class="survey-cb" onclick="toggleCb(this)"><div class="cb-box">✓</div><span>MBTIを踏まえたアドバイス</span></label>
+      </div>
+    </div>
+    <div class="survey-item">
+      <div class="survey-q">Q4. 追加してほしい機能・改善点は？</div>
+      <div class="survey-ta"><textarea id="survey-improve" placeholder="自由に書いてください"></textarea></div>
+    </div>
+    <div class="survey-item">
+      <div class="survey-q">Q5. 感想・一言コメント</div>
+      <div class="survey-ta"><textarea id="survey-comment" placeholder="何でもOK！"></textarea></div>
+    </div>
+    <button class="btn btn-r" onclick="submitSurvey()">アンケートを送信する →</button>
+  </div>
+
+  <div class="survey-done" id="survey-done">
+    <div class="survey-done-icon">🎉</div>
+    <div class="survey-done-txt">ありがとうございました！</div>
+    <div class="survey-done-sub">回答が送信されました。授業の改善に活かします。</div>
+  </div>
+
+  <button class="btn btn-g" onclick="go('s-summary')" style="margin-top:16px;">← まとめに戻る</button>
+</div>
+
+</div>
+
+<script>
+const API_URL='/.netlify/functions/claude';
+
+const Qs=[
+  {q:"パフォーマンスで何を一番大事にしていますか？",note:"直感で選んでください",
+    opts:[
+      {l:"A",t:"技術・精度",d:"完成度の高さ・クリーンな動き"},
+      {l:"B",t:"感情・表現力",d:"伝えたい感情・雰囲気・ストーリー"},
+      {l:"C",t:"どちらも同じくらい",d:"技術と感情のバランスを大事にしている"},
+      {l:"D",t:"独自性・個性",d:"自分だけにしかできない表現を追求"},
+      {l:"E",t:"まだわからない",d:"自分のスタイルを模索中"}
+    ]},
+  {q:"インスタで見せたい自分はどれに近いですか？",note:"",
+    opts:[
+      {l:"A",t:"完成された姿・かっこいい瞬間",d:"ステージ・決め瞬間・クオリティ高い動画"},
+      {l:"B",t:"リアルな過程・成長する姿",d:"練習・失敗・日常・舞台裏"},
+      {l:"C",t:"世界観・アート作品としての投稿",d:"コンセプト・美意識・独自ビジュアル"},
+      {l:"D",t:"人柄・日常・友達感覚",d:"素の自分・コミュニケーション重視"},
+      {l:"E",t:"まだ決まっていない",d:"いろいろ試しながら見つけたい"}
+    ]},
+  {q:"フォロワーとどんな関係を築きたいですか？",note:"",
+    opts:[
+      {l:"A",t:"憧れる存在として見てほしい",d:"ファン・観客として応援してもらう"},
+      {l:"B",t:"仲間・友達として繋がりたい",d:"一緒に成長する・距離が近い関係"},
+      {l:"C",t:"影響を与えたい・刺激になりたい",d:"見た人が動き出すような発信をしたい"},
+      {l:"D",t:"信頼されるプロとして認知されたい",d:"仕事・依頼につながる関係"},
+      {l:"E",t:"まだイメージできない",d:"まずは自分の発信に集中したい"}
+    ]},
+  {q:"インスタを続ける一番の理由は？",note:"",
+    opts:[
+      {l:"A",t:"仕事・チャンスを引き寄せたい",d:"出演依頼・スカウト・案件"},
+      {l:"B",t:"成長の記録を残したい",d:"自分の変化・軌跡を可視化する"},
+      {l:"C",t:"表現の場・作品発表の場にしたい",d:"創作活動のポートフォリオ"},
+      {l:"D",t:"同じ志の仲間とつながりたい",d:"コミュニティ・交流・刺激"},
+      {l:"E",t:"とりあえずやってみたい",d:"明確な目的はまだない"}
+    ]},
+  {q:"投稿するとき何を一番重視しますか？",note:"",
+    opts:[
+      {l:"A",t:"クオリティ・編集のこだわり",d:"映像美・構図・完成度"},
+      {l:"B",t:"リアル感・臨場感",d:"加工しすぎない・その場の空気感"},
+      {l:"C",t:"コンセプトの一貫性",d:"世界観がブレない・テーマが統一されている"},
+      {l:"D",t:"頻度・継続すること",d:"完璧じゃなくても定期的に更新"},
+      {l:"E",t:"まだわからない",d:"試行錯誤しながら決めていきたい"}
+    ]},
+  {q:"自分のスタイルはどれに近いですか？",note:"",
+    opts:[
+      {l:"A",t:"唯一無二・誰にも似ていない",d:"自分だけの色・独自の世界観"},
+      {l:"B",t:"王道・基礎を大切にする",d:"誠実・正統派・本物志向"},
+      {l:"C",t:"トレンドを取り入れる",d:"今っぽい・バズを意識する"},
+      {l:"D",t:"親しみやすい・等身大",d:"飾らない・素の自分が強み"},
+      {l:"E",t:"まだ自分のスタイルがわからない",d:"いろいろ試して探している段階"}
+    ]},
+  {q:"ストーリーズやリールで投稿しやすいのは？",note:"",
+    opts:[
+      {l:"A",t:"作り込んだ動画・写真",d:"編集にこだわった完成度の高いもの"},
+      {l:"B",t:"日常のリアルタイム発信",d:"今日の出来事・ひとこと・気づき"},
+      {l:"C",t:"テーマに沿ったコンセプト動画",d:"世界観を表現したシリーズもの"},
+      {l:"D",t:"フォロワーとの交流コンテンツ",d:"質問・投票・コラボ"},
+      {l:"E",t:"どれも同じくらい難しい",d:"まず何から始めればいいか迷っている"}
+    ]},
+  {q:"5年後、どんな活動をしていたいですか？",note:"",
+    opts:[
+      {l:"A",t:"メジャー・大きなステージ",d:"全国・海外・プロとして第一線"},
+      {l:"B",t:"自分のスクール・チームを持つ",d:"教える・育てる・コミュニティ運営"},
+      {l:"C",t:"独自の作品・ブランドを作る",d:"クリエイター・アーティストとして活動"},
+      {l:"D",t:"地元・身近な場所で輝く",d:"コミュニティに根ざした活動"},
+      {l:"E",t:"まだわからない",d:"今は目の前のことに集中したい"}
+    ]}
+];
+
+const QLs=['パフォーマンスで大事にすること','インスタで見せたい自分','フォロワーとの関係性','インスタを続ける理由','投稿で重視すること','自分のスタイル','投稿しやすい形式','5年後の活動'];
+let ans=[],curQ=0,aiResult=null;
+
+function renderQ(){
+  const q=Qs[curQ];
+  const pct=((curQ+1)/Qs.length*100).toFixed(1);
+  document.getElementById('prog-bar').style.width=pct+'%';
+  document.getElementById('prog-dot').style.left=`calc(${pct}% - 3px)`;
+  document.getElementById('prog-txt').textContent=`${curQ+1} / ${Qs.length}`;
+  const s=ans[curQ];
+  document.getElementById('quiz-area').innerHTML=`
+    <div class="q-big">${String(curQ+1).padStart(2,'0')}</div>
+    <div class="q-txt">${q.q}</div>
+    ${q.note?`<div class="q-note">${q.note}</div>`:'<div style="height:8px"></div>'}
+    <div class="choices">
+      ${q.opts.map((o,i)=>`
+        <div class="ch ${s===o.l?'on':''}" onclick="pick('${o.l}')">
+          <div class="ch-l">${o.l}</div>
+          <div><div class="ch-title">${o.t}</div><div class="ch-desc">${o.d}</div></div>
+        </div>`).join('')}
+    </div>`;
+  document.getElementById('btn-next').disabled=!s;
+  document.getElementById('btn-back').style.display=curQ===0?'none':'block';
+}
+
+function pick(v){
+  ans[curQ]=v;
+  document.querySelectorAll('.ch').forEach(el=>{
+    const l=el.querySelector('.ch-l');
+    el.classList.toggle('on',l&&l.textContent===v);
+  });
+  document.getElementById('btn-next').disabled=false;
+}
+
+function nextQ(){curQ<Qs.length-1?(curQ++,renderQ()):go('s-input');}
+function prevQ(){curQ>0&&(curQ--,renderQ());}
+
+const g=id=>(document.getElementById(id)?.value||'').trim();
+const aLbl=(a,i)=>{const o=Qs[i].opts.find(x=>x.l===a);return o?o.t:'未回答';};
+
+async function generate(){
+  const btn=document.getElementById('btn-gen');
+  btn.disabled=true;
+  go('s-loading');
+  const steps=['情報を分析しています','ブランドタイプを診断中...','プロフィールを作成中...','カラーを選定中...','投稿ネタを考えています...','リールを設計中...','スケジュールを組んでいます...'];
+  let si=0;
+  const stepEl=document.getElementById('load-step');
+  const timer=setInterval(()=>{si=(si+1)%steps.length;stepEl.textContent=steps[si];},1800);
+
+  const diagText=ans.map((a,i)=>`・${QLs[i]}：${aLbl(a,i)}`).join('\n');
+  const mbtiSel=document.getElementById('d-mbti');
+  const mbtiTxt=g('d-mbti')?(mbtiSel.options[mbtiSel.selectedIndex].text):'不明';
+
+  const prompt=`あなたはInstagramブランディングの専門家です。以下のダンサー・アーティスト志望の専門学生の情報をもとに、最適なInstagramアカウント運用プランを設計してください。
+
+【診断回答】
+${diagText}
+
+【基本情報】
+名前・活動名：${g('d-name')||'未入力'}
+ジャンル・スタイル：${g('d-genre')||'未入力'}
+活動拠点・所属：${g('d-base')||'未入力'}
+今目指していること：${g('d-goal')||'未入力'}
+見てほしい人：${g('d-target')||'未入力'}
+見た人に感じてほしいこと：${g('d-feeling')||'未入力'}
+
+【自分の深掘り】
+好きなこと・趣味：${g('d-likes')||'未入力'}
+影響を受けたアーティスト：${g('d-influence')||'未入力'}
+今やっていること：${g('d-doing')||'未入力'}
+始めたきっかけ：${g('d-start')||'未入力'}
+苦手なこと：${g('d-weak')||'未入力'}
+今の実績・経験：${g('d-record')||'未入力'}
+
+【MBTIタイプ】${mbtiTxt}${g('d-mbti-note')?' — '+g('d-mbti-note'):''}
+
+以下のJSON形式のみで出力してください。前後の説明・マークダウン記号は不要です。
+
+{
+  "brandType": "タイプ名（SHOW MAKER / STORY TELLER / CREATOR / GROWER / HYBRID / EXPLORER のいずれか）",
+  "brandEmoji": "絵文字1つ",
+  "brandDesc": "このブランドタイプの説明と強み（2〜3文）",
+  "profileTexts": [
+    {
+      "label": "かっこいい系",
+      "text": "140字以内のプロフィール文（絵文字1〜2個）",
+      "targetUser": "このプロフィールに惹かれるターゲット層（1文）",
+      "contentTheme": "このプロフィールと一貫した投稿テーマ・内容（2〜3テーマを箇条書き）"
+    },
+    {
+      "label": "親しみやすい系",
+      "text": "140字以内のプロフィール文（絵文字1〜2個）",
+      "targetUser": "このプロフィールに惹かれるターゲット層（1文）",
+      "contentTheme": "このプロフィールと一貫した投稿テーマ・内容（2〜3テーマを箇条書き）"
+    },
+    {
+      "label": "熱量系",
+      "text": "140字以内のプロフィール文（絵文字1〜2個）",
+      "targetUser": "このプロフィールに惹かれるターゲット層（1文）",
+      "contentTheme": "このプロフィールと一貫した投稿テーマ・内容（2〜3テーマを箇条書き）"
+    }
+  ],
+  "brandDeclaration": ["宣言①20字以内","宣言②","宣言③","宣言④","宣言⑤"],
+  "colors": [
+    {"name": "パレット名", "main": "#HEXCODE", "sub": "#HEXCODE", "accent": "#HEXCODE", "reason": "このパレットが合う理由と使い方"},
+    {"name": "パレット名", "main": "#HEXCODE", "sub": "#HEXCODE", "accent": "#HEXCODE", "reason": "このパレットが合う理由と使い方"},
+    {"name": "パレット名", "main": "#HEXCODE", "sub": "#HEXCODE", "accent": "#HEXCODE", "reason": "このパレットが合う理由と使い方"}
+  ],
+  "highlights": ["ハイライト名①","ハイライト名②","ハイライト名③","ハイライト名④"],
+  "posts": [
+    {"title": "投稿タイトル", "desc": "一言説明"},
+    {"title": "投稿タイトル", "desc": "一言説明"},
+    {"title": "投稿タイトル", "desc": "一言説明"},
+    {"title": "投稿タイトル", "desc": "一言説明"},
+    {"title": "投稿タイトル", "desc": "一言説明"},
+    {"title": "投稿タイトル", "desc": "一言説明"},
+    {"title": "投稿タイトル", "desc": "一言説明"},
+    {"title": "投稿タイトル", "desc": "一言説明"},
+    {"title": "投稿タイトル", "desc": "一言説明"},
+    {"title": "投稿タイトル", "desc": "一言説明"}
+  ],
+  "reels": [
+    {"hook": "最初の3秒で見せるもの", "theme": "内容・テーマ", "feel": "見た人に感じてほしいこと"},
+    {"hook": "最初の3秒で見せるもの", "theme": "内容・テーマ", "feel": "見た人に感じてほしいこと"},
+    {"hook": "最初の3秒で見せるもの", "theme": "内容・テーマ", "feel": "見た人に感じてほしいこと"}
+  ],
+  "schedule": {"mon": "内容","tue": "内容","wed": "内容","thu": "内容","fri": "内容","sat": "内容","sun": "内容"},
+  "unityRules": ["見た目の統一ルール","内容の統一ルール","言葉・キャラクターの統一ルール"],
+  "mbtiAdvice": ["アドバイス①","アドバイス②","アドバイス③"],
+  "visualStrategy": "言葉より世界観・ビジュアルで勝負したい場合の戦略（3〜4文）",
+  "feedStyle": "BOLD か WARM か CREATIVE か FRESH のいずれか1つ（フィードビジュアルに使用）"
+}`;
+
+  try{
+    const res=await fetch(API_URL,{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({messages:[{role:'user',content:prompt}]})
+    });
+    const data=await res.json();
+    clearInterval(timer);
+    if(data.error)throw new Error(data.error);
+    const raw=data.content.map(c=>c.text||'').join('');
+    const clean=raw.replace(/```json|```/g,'').trim();
+    aiResult=JSON.parse(clean);
+    renderResult();
+    go('s-result');
+  }catch(e){
+    clearInterval(timer);
+    alert('生成に失敗しました。もう一度お試しください。\n'+e.message);
+    go('s-input');
+    btn.disabled=false;
+  }
+}
+
+function renderResult(){
+  const r=aiResult;
+  let html=`
+    <div class="r-hero">
+      <div class="r-hero-eye">YOUR BRAND TYPE</div>
+      <div class="r-hero-type">${r.brandEmoji} ${r.brandType}</div>
+      <div class="r-hero-desc">${r.brandDesc}</div>
+    </div>
+
+    <div class="r-card">
+      <div class="r-head">✍️ プロフィール文（3案）</div>
+      <div class="r-body">
+        ${r.profileTexts.map(p=>`
+          <div class="pf-opt">
+            <div class="pf-opt-lbl">${p.label}</div>
+            <div class="pf-opt-txt">${p.text}</div>
+            <div class="pf-opt-target">👤 ターゲット：${p.targetUser}</div>
+            <div class="pf-opt-posts">📌 一貫した投稿テーマ：${p.contentTheme}</div>
+          </div>`).join('')}
+      </div>
+    </div>
+
+    <div class="r-card">
+      <div class="r-head">⭐ 一言ブランド宣言（5案）</div>
+      <div class="r-body">
+        ${r.brandDeclaration.map((d,i)=>`<div class="bd-item"><div class="bd-n">${i+1}</div><div class="bd-txt">${d}</div></div>`).join('')}
+      </div>
+    </div>
+
+    <div class="r-card">
+      <div class="r-head">🎨 ブランドカラー（3案）</div>
+      <div class="r-body">
+        ${r.colors.map(c=>`
+          <div class="palette">
+            <div class="palette-name">${c.name}</div>
+            <div class="swatches">
+              <div class="sw" style="background:${c.main}"></div>
+              <div class="sw" style="background:${c.sub}"></div>
+              <div class="sw" style="background:${c.accent}"></div>
+              <div class="sw" style="background:#ffffff;border:1px solid #ddd"></div>
+            </div>
+            <div class="sw-row">
+              <div class="sw-cell"><span class="sw-lbl">メイン</span><span class="sw-hex">${c.main}</span></div>
+              <div class="sw-cell"><span class="sw-lbl">サブ</span><span class="sw-hex">${c.sub}</span></div>
+              <div class="sw-cell"><span class="sw-lbl">アクセント</span><span class="sw-hex">${c.accent}</span></div>
+              <div class="sw-cell"><span class="sw-lbl">ベース</span><span class="sw-hex">#ffffff</span></div>
+            </div>
+            <div class="palette-reason">${c.reason}</div>
+          </div>`).join('')}
+      </div>
+    </div>
+
+    <div class="r-card">
+      <div class="r-head">📌 ハイライト構成</div>
+      <div class="r-body" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+        ${r.highlights.map((h,i)=>`
+          <div style="background:var(--card2);border:1px solid var(--bdr);border-radius:10px;padding:12px 14px;display:flex;align-items:center;gap:10px;">
+            <div style="font-family:'Bebas Neue',sans-serif;font-size:20px;color:var(--acc);">${i+1}</div>
+            <div style="font-size:13px;font-weight:700;">${h}</div>
+          </div>`).join('')}
+      </div>
+    </div>
+
+    <div class="r-card">
+      <div class="r-head">📸 おすすめ投稿ネタ（10本）</div>
+      <div class="r-body">
+        ${r.posts.map((p,i)=>`
+          <div class="post-item">
+            <div class="post-n">POST ${String(i+1).padStart(2,'0')}</div>
+            <div class="post-title">${p.title}</div>
+            <div class="post-desc">${p.desc}</div>
+          </div>`).join('')}
+      </div>
+    </div>
+
+    <div class="r-card">
+      <div class="r-head">🎬 リール設計（3本）</div>
+      <div class="r-body">
+        ${r.reels.map((rl,i)=>`
+          <div class="reel-item">
+            <div class="reel-n">REEL ${String(i+1).padStart(2,'0')}</div>
+            <div class="reel-r"><div class="reel-k">最初の3秒</div><div class="reel-v">${rl.hook}</div></div>
+            <div class="reel-r"><div class="reel-k">内容</div><div class="reel-v">${rl.theme}</div></div>
+            <div class="reel-r"><div class="reel-k">感じてほしいこと</div><div class="reel-v">${rl.feel}</div></div>
+          </div>`).join('')}
+      </div>
+    </div>
+
+    <div class="r-card">
+      <div class="r-head">📅 週間投稿スケジュール</div>
+      <div class="r-body">
+        <div class="sched">
+          <div class="sd">月</div><div class="sv">${r.schedule.mon||'—'}</div>
+          <div class="sd">火</div><div class="sv">${r.schedule.tue||'—'}</div>
+          <div class="sd">水</div><div class="sv">${r.schedule.wed||'—'}</div>
+          <div class="sd">木</div><div class="sv">${r.schedule.thu||'—'}</div>
+          <div class="sd">金</div><div class="sv">${r.schedule.fri||'—'}</div>
+          <div class="sd">土</div><div class="sv">${r.schedule.sat||'—'}</div>
+          <div class="sd">日</div><div class="sv">${r.schedule.sun||'—'}</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="r-card">
+      <div class="r-head">🔗 統一感ルール（3つ）</div>
+      <div class="r-body">
+        ${r.unityRules.map(u=>`
+          <div class="unity-item">
+            <div style="color:var(--acc);flex-shrink:0;font-size:16px;">✦</div>
+            <div style="font-size:13px;font-weight:300;line-height:1.6;">${u}</div>
+          </div>`).join('')}
+      </div>
+    </div>
+
+    <div class="r-card">
+      <div class="r-head">🧠 MBTIを踏まえたアドバイス</div>
+      <div class="r-body">
+        ${r.mbtiAdvice.map((a,i)=>`
+          <div class="mbti-adv">
+            <div class="mbti-adv-n">ADVICE ${String(i+1).padStart(2,'0')}</div>
+            <div style="font-size:13px;color:var(--white);font-weight:300;line-height:1.6;">${a}</div>
+          </div>`).join('')}
+      </div>
+    </div>
+
+    <div class="r-card">
+      <div class="r-head">👁 ビジュアルブランド戦略</div>
+      <div class="r-body">
+        <div style="font-size:13px;color:var(--white);font-weight:300;line-height:1.8;">${r.visualStrategy}</div>
+      </div>
+    </div>`;
+  document.getElementById('result-area').innerHTML=html;
+}
+
+function buildVisual(){
+  const r=aiResult;
+  const fs=(r?.feedStyle||'BOLD').toUpperCase();
+  const styles={
+    'BOLD':{label:'BOLD & MINIMAL',colors:{main:'#111111',sub:'#555555',acc:'#ff2d55'},avatarBg:'#111111',bio:g('d-goal')||'目標に向かって発信中',posts:[{t:'reel',l:'リール'},{t:'post',l:'投稿'},{t:'reel',l:'リール'},{t:'post',l:'投稿'},{t:'post',l:'投稿'},{t:'post',l:'投稿'},{t:'reel',l:'リール'},{t:'post',l:'投稿'},{t:'post',l:'投稿'}],pc:{reel:'#111',post:'#444'}},
+    'WARM':{label:'WARM & REAL',colors:{main:'#b45309',sub:'#d97706',acc:'#f59e0b'},avatarBg:'#f59e0b',bio:g('d-goal')||'等身大で発信中',posts:[{t:'reel',l:'リール'},{t:'story',l:'日常'},{t:'post',l:'投稿'},{t:'story',l:'日常'},{t:'reel',l:'リール'},{t:'post',l:'投稿'},{t:'post',l:'投稿'},{t:'reel',l:'リール'},{t:'story',l:'日常'}],pc:{reel:'#b45309',post:'#d97706',story:'#f59e0b'}},
+    'CREATIVE':{label:'UNIQUE & CREATIVE',colors:{main:'#4c1d95',sub:'#7c3aed',acc:'#a78bfa'},avatarBg:'#7c3aed',bio:g('d-goal')||'独自の表現を追求中',posts:[{t:'concept',l:'作品'},{t:'reel',l:'リール'},{t:'concept',l:'作品'},{t:'reel',l:'リール'},{t:'concept',l:'作品'},{t:'reel',l:'リール'},{t:'post',l:'投稿'},{t:'concept',l:'作品'},{t:'reel',l:'リール'}],pc:{concept:'#4c1d95',reel:'#7c3aed',post:'#a78bfa'}},
+    'FRESH':{label:'FRESH & AUTHENTIC',colors:{main:'#065f46',sub:'#0891b2',acc:'#10b981'},avatarBg:'#065f46',bio:g('d-goal')||'フレッシュに発信中',posts:[{t:'post',l:'投稿'},{t:'reel',l:'リール'},{t:'post',l:'投稿'},{t:'reel',l:'リール'},{t:'post',l:'投稿'},{t:'story',l:'日常'},{t:'reel',l:'リール'},{t:'post',l:'投稿'},{t:'reel',l:'リール'}],pc:{post:'#065f46',reel:'#0891b2',story:'#10b981'}}
+  };
+  const st=styles[fs]||styles['BOLD'];
+  const usedColors=r?.colors?.[0]||null;
+  const mainC=usedColors?.main||st.colors.main;
+  const subC=usedColors?.sub||st.colors.sub;
+  const accC=usedColors?.accent||st.colors.acc;
+  const name=(g('d-name')||'yourname').split('/')[0].trim();
+  const initial=name[0]?.toUpperCase()||'Y';
+  const handle='@'+(name.toLowerCase().replace(/[^a-z0-9]/g,'')||'yourname');
+  const bioTxt=r?.profileTexts?.[0]?.text?.substring(0,40)||st.bio;
+
+  const gridHTML=st.posts.map((p,i)=>{
+    const bg=st.pc[p.t]||st.colors.sub;
+    const icons={reel:'▶',post:'📷',story:'◎',concept:'✦'};
+    const isReel=p.t==='reel';
+    return `<div class="feed-cell" style="background:${bg};">
+      <span class="feed-cell-icon">${icons[p.t]||'◎'}</span>
+      <span class="feed-cell-lbl">${p.l}</span>
+      ${isReel?'<span class="feed-cell-reel">▶</span>':''}
+    </div>`;
+  }).join('');
+
+  const hlHtml=['自己紹介','練習','出演歴','QA'].map(lbl=>`
+    <div class="feed-hl">
+      <div class="feed-hl-ring" style="border-color:${mainC};"><span style="font-size:14px;">○</span></div>
+      <div class="feed-hl-lbl">${lbl}</div>
+    </div>`).join('');
+
+  const seen=new Set();
+  const legendHTML=st.posts.filter(p=>{if(seen.has(p.t))return false;seen.add(p.t);return true;}).map(p=>{
+    const count=st.posts.filter(x=>x.t===p.t).length;
+    const rec=count>=4?'週3〜4本推奨':count>=3?'週2〜3本推奨':'週1〜2本推奨';
+    return `<div class="vb-legend-row"><div class="vb-legend-dot" style="background:${st.pc[p.t]||st.colors.sub}"></div><span>${p.l}</span><span style="margin-left:auto;font-size:11px;color:var(--gray);">${count}マス / ${rec}</span></div>`;
+  }).join('');
+
+  document.getElementById('visual-area').innerHTML=`
+    <div style="background:var(--card);border:1px solid var(--bdr);border-radius:14px;padding:14px 16px;margin-bottom:14px;">
+      <div style="font-family:'Space Mono',monospace;font-size:9px;letter-spacing:3px;color:var(--acc);margin-bottom:6px;">FEED STYLE</div>
+      <div style="font-size:20px;font-weight:900;letter-spacing:2px;">${st.label}</div>
+      <div style="font-size:11px;color:var(--gray);margin-top:4px;font-weight:300;">AIが診断結果をもとに選定したビジュアルスタイル</div>
+    </div>
+
+    <div style="display:flex;justify-content:center;margin-bottom:16px;">
+    <div style="width:260px;background:#1a1a1a;border-radius:28px;padding:8px;border:2px solid #2a2a2a;">
+      <div style="height:20px;display:flex;align-items:center;justify-content:space-between;padding:0 12px;margin-bottom:4px;">
+        <span style="font-size:10px;color:#666;font-weight:500;">9:41</span>
+        <div style="width:14px;height:6px;border:1px solid #444;border-radius:1px;position:relative;"><div style="width:60%;height:100%;background:#555;border-radius:1px;"></div></div>
+      </div>
+      <div style="background:#ffffff;border-radius:20px;overflow:hidden;">
+        <div class="feed-header"><span class="feed-acct">${handle}</span><span style="font-size:18px;color:#333;">⋮</span></div>
+        <div class="feed-profile">
+          <div class="feed-top">
+            <div class="feed-avatar" style="background:${mainC};">${initial}</div>
+            <div class="feed-stats">
+              <div class="feed-stat"><div class="feed-stat-n">12</div><div class="feed-stat-l">投稿</div></div>
+              <div class="feed-stat"><div class="feed-stat-n">248</div><div class="feed-stat-l">フォロワー</div></div>
+              <div class="feed-stat"><div class="feed-stat-n">89</div><div class="feed-stat-l">フォロー</div></div>
+            </div>
+          </div>
+          <div class="feed-bio">${bioTxt}</div>
+          <div class="feed-btn-row">
+            <div class="feed-btn">プロフィールを編集</div>
+          </div>
+        </div>
+        <div class="feed-hls">${hlHtml}</div>
+        <div class="feed-tabs">
+          <div class="feed-tab active">⊞</div>
+          <div class="feed-tab">▶</div>
+          <div class="feed-tab">⊕</div>
+        </div>
+        <div class="feed-grid">${gridHTML}</div>
+      </div>
+    </div>
+    </div>
+
+    <div style="background:var(--card);border:1px solid var(--bdr);border-radius:14px;padding:14px 16px;margin-bottom:12px;">
+      <div style="font-family:'Space Mono',monospace;font-size:9px;letter-spacing:3px;color:var(--acc);margin-bottom:10px;">COLOR PALETTE</div>
+      <div style="display:flex;gap:6px;height:44px;margin-bottom:8px;">
+        <div style="flex:1;border-radius:7px;background:${mainC};border:1px solid rgba(255,255,255,0.08);"></div>
+        <div style="flex:1;border-radius:7px;background:${subC};border:1px solid rgba(255,255,255,0.08);"></div>
+        <div style="flex:1;border-radius:7px;background:${accC};border:1px solid rgba(255,255,255,0.08);"></div>
+        <div style="flex:1;border-radius:7px;background:#ffffff;border:1px solid #ddd;"></div>
+      </div>
+      <div style="display:flex;gap:6px;">
+        ${[{n:'メイン',h:mainC},{n:'サブ',h:subC},{n:'アクセント',h:accC},{n:'ベース',h:'#ffffff'}].map(c=>`<div style="flex:1;text-align:center;"><div style="font-size:9px;color:var(--gray);">${c.n}</div><div style="font-family:'Space Mono',monospace;font-size:8px;color:var(--white);">${c.h}</div></div>`).join('')}
+      </div>
+    </div>
+
+    <div style="background:var(--card);border:1px solid var(--bdr);border-radius:14px;padding:14px 16px;margin-bottom:12px;">
+      <div style="font-family:'Space Mono',monospace;font-size:9px;letter-spacing:3px;color:var(--acc);margin-bottom:10px;">投稿タイプ凡例</div>
+      <div class="vb-legend">${legendHTML}</div>
+    </div>
+
+    <div style="background:var(--card);border:1px solid var(--bdr);border-radius:14px;padding:14px 16px;">
+      <div style="font-family:'Space Mono',monospace;font-size:9px;letter-spacing:3px;color:var(--acc);margin-bottom:10px;">VISUAL RULES</div>
+      <div style="display:flex;flex-direction:column;gap:8px;">
+        ${['この3色を全投稿で統一して使う','フォントは太字1種類に絞る','全動画の右下に「'+handle+'」を入れる','フィルター・明るさを統一してフィードに統一感を出す'].map(r=>`<div style="font-size:13px;color:var(--white);display:flex;gap:10px;align-items:flex-start;"><span style="color:var(--acc);flex-shrink:0;">✦</span>${r}</div>`).join('')}
+      </div>
+    </div>`;
+}
+
+function buildSum(){
+  const r=aiResult;
+  if(!r){document.getElementById('sum-area').innerHTML='<div style="color:var(--gray);font-size:13px;padding:20px 0;">まずAI設計を完了させてください</div>';return;}
+  const mbtiSel=document.getElementById('d-mbti');
+  const mbtiTxt=g('d-mbti')?(mbtiSel.options[mbtiSel.selectedIndex].text):'スキップ';
+  const row=(k,v)=>`<div class="sum-row"><div class="sum-k">${k}</div><div class="sum-v ${!v?'empty':''}">${v||'未入力'}</div></div>`;
+  document.getElementById('sum-area').innerHTML=`
+    <div class="sum-sec"><div class="sum-title">ブランドタイプ</div><div style="font-size:28px;font-weight:900;margin-bottom:8px;">${r.brandEmoji} ${r.brandType}</div><div style="font-size:12px;color:var(--gray);font-weight:300;line-height:1.6;">${r.brandDesc}</div></div>
+    <div class="sum-sec"><div class="sum-title">診断の回答</div><div class="fg" style="padding:4px 0;">${ans.map((a,i)=>row(QLs[i],aLbl(a,i))).join('')}</div></div>
+    <div class="sum-sec"><div class="sum-title">基本情報</div><div class="fg" style="padding:4px 0;">${row('名前',g('d-name'))+row('ジャンル',g('d-genre'))+row('目標',g('d-goal'))+row('ターゲット',g('d-target'))+row('MBTI',mbtiTxt)}</div></div>
+    <div class="sum-sec"><div class="sum-title">プロフィール文（3案）</div>${r.profileTexts.map((p,i)=>`<div class="sum-sec"><div style="font-family:'Space Mono',monospace;font-size:9px;color:var(--acc);letter-spacing:2px;margin-bottom:6px;">${p.label}</div><div style="font-size:12px;color:var(--white);font-weight:300;line-height:1.7;margin-bottom:4px;">${p.text}</div><div style="font-size:11px;color:var(--acc2);">▶ ${p.targetUser}</div></div>`).join('')}</div>
+    <div class="sum-sec"><div class="sum-title">ブランド宣言</div><div class="fg" style="padding:4px 0;">${r.brandDeclaration.map((d,i)=>row(`宣言${i+1}`,d)).join('')}</div></div>
+    <div class="sum-sec"><div class="sum-title">投稿ネタ（10本）</div><div class="fg" style="padding:4px 0;">${r.posts.map((p,i)=>row(`POST ${i+1}`,p.title+'：'+p.desc)).join('')}</div></div>
+    <div class="sum-sec"><div class="sum-title">リール設計</div><div class="fg" style="padding:4px 0;">${r.reels.map((rl,i)=>row(`REEL ${i+1}`,`フック：${rl.hook} / テーマ：${rl.theme}`)).join('')}</div></div>
+    <div class="sum-sec"><div class="sum-title">週間スケジュール</div><div class="fg" style="padding:4px 0;">${[['月',r.schedule.mon],['火',r.schedule.tue],['水',r.schedule.wed],['木',r.schedule.thu],['金',r.schedule.fri],['土',r.schedule.sat],['日',r.schedule.sun]].map(([d,v])=>row(d,v)).join('')}</div></div>`;
+}
+
+// SURVEY
+const starRatings={};
+function setStar(q,v){
+  starRatings[q]=v;
+  const stars=document.getElementById('stars-'+q);
+  if(!stars)return;
+  [...stars.querySelectorAll('.star-btn')].forEach((s,i)=>s.classList.toggle('on',i<v));
+}
+function toggleCb(el){el.classList.toggle('on');}
+
+async function submitSurvey(){
+  const q1=starRatings[1]||0;
+  const q2=starRatings[2]||0;
+  const goodFeatures=[...document.querySelectorAll('#cb-list .survey-cb.on')].map(el=>el.querySelector('span').textContent);
+  const improve=document.getElementById('survey-improve').value;
+  const comment=document.getElementById('survey-comment').value;
+
+  const payload={timestamp:new Date().toISOString(),brandType:aiResult?.brandType||'',usability:q1,aiUsefulness:q2,goodFeatures,improve,comment};
+
+  try{
+    await fetch('https://formspree.io/f/YOUR_FORM_ID',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+  }catch(e){console.log('survey send note:',e);}
+
+  document.getElementById('survey-form').style.display='none';
+  document.getElementById('survey-done').style.display='block';
+}
+
+function go(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('on'));
+  document.getElementById(id).classList.add('on');
+  if(id==='s-visual')buildVisual();
+  if(id==='s-summary')buildSum();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+renderQ();
+</script>
+</body>
+</html>
