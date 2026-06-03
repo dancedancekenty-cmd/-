@@ -567,8 +567,9 @@ ${diagText}
     clearInterval(timer);
     if(data.error)throw new Error(data.error);
     const raw=data.content.map(c=>c.text||'').join('');
-    const clean=raw.replace(/```json|```/g,'').trim();
-    aiResult=JSON.parse(clean);
+    const jsonMatch=raw.match(/{[\s\S]*}/);
+    if(!jsonMatch)throw new Error('JSONが見つかりませんでした');
+    aiResult=JSON.parse(jsonMatch[0]);
     renderResult();
     go('s-result');
   }catch(e){
