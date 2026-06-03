@@ -743,17 +743,20 @@ function buildVisual(){
     'FRESH':{label:'FRESH & AUTHENTIC',colors:{main:'#065f46',sub:'#0891b2',acc:'#10b981'},avatarBg:'#065f46',bio:g('d-goal')||'フレッシュに発信中',posts:[{t:'post',l:'投稿'},{t:'reel',l:'リール'},{t:'post',l:'投稿'},{t:'reel',l:'リール'},{t:'post',l:'投稿'},{t:'story',l:'日常'},{t:'reel',l:'リール'},{t:'post',l:'投稿'},{t:'reel',l:'リール'}],pc:{post:'#065f46',reel:'#0891b2',story:'#10b981'}}
   };
   const st=styles[fs]||styles['BOLD'];
+  // AIが返したカラーを優先、なければスタイルのデフォルト
   const usedColors=r?.colors?.[0]||null;
-  const mainC=usedColors?.main||st.colors.main;
-  const subC=usedColors?.sub||st.colors.sub;
-  const accC=usedColors?.accent||st.colors.acc;
+  const mainC=(usedColors?.main&&usedColors.main.startsWith('#'))?usedColors.main:st.colors.main;
+  const subC=(usedColors?.sub&&usedColors.sub.startsWith('#'))?usedColors.sub:st.colors.sub;
+  const accC=(usedColors?.accent&&usedColors.accent.startsWith('#'))?usedColors.accent:st.colors.acc;
+  // フィードグリッドもAIカラーで上書き
+  const pc={reel:mainC,post:subC,story:accC,concept:mainC};
   const name=(g('d-name')||'yourname').split('/')[0].trim();
   const initial=name[0]?.toUpperCase()||'Y';
   const handle='@'+(name.toLowerCase().replace(/[^a-z0-9]/g,'')||'yourname');
   const bioTxt=r?.profileTexts?.[0]?.text?.substring(0,40)||st.bio;
 
   const gridHTML=st.posts.map((p,i)=>{
-    const bg=st.pc[p.t]||st.colors.sub;
+    const bg=pc[p.t]||st.colors.sub;
     const icons={reel:'▶',post:'📷',story:'◎',concept:'✦'};
     const isReel=p.t==='reel';
     return `<div class="feed-cell" style="background:${bg};">
@@ -773,7 +776,7 @@ function buildVisual(){
   const legendHTML=st.posts.filter(p=>{if(seen.has(p.t))return false;seen.add(p.t);return true;}).map(p=>{
     const count=st.posts.filter(x=>x.t===p.t).length;
     const rec=count>=4?'週3〜4本推奨':count>=3?'週2〜3本推奨':'週1〜2本推奨';
-    return `<div class="vb-legend-row"><div class="vb-legend-dot" style="background:${st.pc[p.t]||st.colors.sub}"></div><span>${p.l}</span><span style="margin-left:auto;font-size:11px;color:var(--gray);">${count}マス / ${rec}</span></div>`;
+    return `<div class="vb-legend-row"><div class="vb-legend-dot" style="background:${pc[p.t]||st.colors.sub}"></div><span>${p.l}</span><span style="margin-left:auto;font-size:11px;color:var(--gray);">${count}マス / ${rec}</span></div>`;
   }).join('');
 
   document.getElementById('visual-area').innerHTML=`
