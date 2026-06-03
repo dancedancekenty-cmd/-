@@ -561,15 +561,19 @@ ${diagText}
     const res=await fetch(API_URL,{
       method:'POST',
       headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({messages:[{role:'user',content:prompt}]})
+      body:JSON.stringify({
+        system:'You are a JSON generator. Output ONLY valid JSON. No markdown, no backticks, no explanation. All string values must be on a single line. No newlines inside string values.',
+        messages:[{role:'user',content:prompt}]
+      })
     });
     const data=await res.json();
     clearInterval(timer);
     if(data.error)throw new Error(data.error);
     const raw=data.content.map(c=>c.text||'').join('');
-    const jsonMatch=raw.match(/{[\s\S]*}/);
+    const jsonMatch=raw.match(/\{[\s\S]*\}/);
     if(!jsonMatch)throw new Error('JSONが見つかりませんでした');
-    aiResult=JSON.parse(jsonMatch[0]);
+    let clean=jsonMatch[0].replace(/[\u0000-\u0008\u000b\u000c\u000e-\u001f]/g,'');
+    aiResult=JSON.parse(clean);
     renderResult();
     go('s-result');
   }catch(e){
