@@ -17,7 +17,7 @@ exports.handler = async (event) => {
       },
       body: JSON.stringify({
         model: 'claude-haiku-4-5',
-        max_tokens: 2000,
+        max_tokens: 3000,
         system: body.system || '',
         messages: body.messages,
       }),
